@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Device Tracker</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="configure_numbers">Configure Numbers</string>
+    <string name="add_numbers">Add Numbers</string>
+    <string name="pref_numbers">pref_numbers</string>
+    <string name="pref_imeiimsi">pref_imesiimsi</string>
+    <string name="imei">imei</string>
+    <string name="imsi">imsi</string>
+
+</resources>

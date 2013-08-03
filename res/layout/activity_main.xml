@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/activity_main_txt_configure_numbers"
+        style="@style/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:text="@string/configure_numbers"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/activity_main_btn_add_numbers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_main_txt_configure_numbers"
+        android:layout_centerInParent="true"
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_selector"
+        android:shadowColor="#0099CC"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:text="@string/add_numbers"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/activity_main_view_border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/activity_main_btn_add_numbers"
+        android:layout_margin="5dp"
+        android:background="#ff0099CC" />
+
+    <ListView
+        android:id="@+id/activity_main_list_numbers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activity_main_view_border"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#669900"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none" />
+
+</RelativeLayout>

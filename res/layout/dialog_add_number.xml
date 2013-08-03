@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp" >
+
+    <TextView
+        android:id="@+id/dialog_add_number_txt_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF33B5E5"
+        android:gravity="center_horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/dialog_add_number_edt_add_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_add_number_txt_header"
+        android:layout_margin="4dp"
+        android:hint="@string/add_numbers"
+        android:inputType="number" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_add_number_edt_add_number"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/dialog_add_number_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_selector"
+            android:shadowColor="#0099CC"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="@android:string/cancel"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/dialog_add_number_btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/dialog_add_number_btn_cancel"
+            android:background="@drawable/button_selector"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:shadowColor="#0099CC"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="@android:string/ok"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+</RelativeLayout>
