@@ -2,11 +2,16 @@ package com.ngshah.devicetracker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import android.app.Service;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.media.AudioManager;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.telephony.NeighboringCellInfo;
@@ -43,6 +48,7 @@ public class IncomingSMSReceiverService extends Service {
 	
 	private void checkContent() {
 		for (String content: smsContent) {
+			content = content.toString().toUpperCase();
 			Log.e(TAG, "Content is : " + content);
 			if ( content.equalsIgnoreCase(Common.prefixes[0]) ) {	//	IMEI
 				Log.e(TAG, "Sending IMEI");
@@ -118,27 +124,51 @@ public class IncomingSMSReceiverService extends Service {
 					content.equalsIgnoreCase(Common.prefixes[16])) {	//	WIPE DATA
 				
 			} else if ( content.equalsIgnoreCase(Common.prefixes[17]) ) {	//	RING
-//				final AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(AUDIO_SERVICE);
-//				int maxVolumeForDevice = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-//				audioManager.setStreamVolume(AudioManager.STREAM_RING, maxVolumeForDevice, AudioManager.FLAG_ALLOW_RINGER_MODES);
-				
-//				final Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-//				final Ringtone rt = RingtoneManager.getRingtone(this, uri);
-//				rt.play();
-				
-				MediaPlayer player = MediaPlayer.create(this,
-						RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-				player.start();
+				playRingAndVibratePhone(false, true);
 			} else if ( content.equalsIgnoreCase(Common.prefixes[18]) ) {	//	VIBRATE
-				((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(800);
+				playRingAndVibratePhone(true, false);
 			} else if ( content.equalsIgnoreCase(Common.prefixes[19]) ||
 					content.equalsIgnoreCase(Common.prefixes[20])) {	//	RING AND VIBRATE
-				((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(800);
+				playRingAndVibratePhone(true, true);
+			} else if ( content.contains(Common.prefixes[21]) ||
+					content.contains(Common.prefixes[22]) || 
+					content.contains(Common.prefixes[23]) ||
+					content.contains(Common.prefixes[24])) {	//	Screen Lock
 				
+				Log.e(TAG, "Locking Screen ");
+				
+				final DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+				boolean isEnabled = devicePolicyManager.isAdminActive(new ComponentName(this, MainActivity.class));
+				
+				Log.e(TAG, "Enabled : " + isEnabled);
+				String newPassword = content;
+				newPassword = newPassword.replace(Common.prefixes[21], "").trim();
+				newPassword = newPassword.replace(Common.prefixes[22], "").trim();
+				newPassword = newPassword.replace(Common.prefixes[23], "").trim();
+				newPassword = newPassword.replace(Common.prefixes[24], "").trim();
+				
+				devicePolicyManager.resetPassword(newPassword, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+				devicePolicyManager.lockNow();
 			}
 		}
 		
 		stopSelf();
+	}
+	
+	private void playRingAndVibratePhone(boolean vibrate, boolean ring) {
+		if ( vibrate ) {
+			((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(12000);
+		}
+		
+		if ( ring ) {
+			final AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+			int maxVolumeForDevice = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+			audioManager.setStreamVolume(AudioManager.STREAM_RING, maxVolumeForDevice, AudioManager.FLAG_ALLOW_RINGER_MODES);
+			
+			final Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			final Ringtone rt = RingtoneManager.getRingtone(this, uri);
+			rt.play();
+		}
 	}
 	
 	private void sendSMS (String content) {

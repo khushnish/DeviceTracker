@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="configure_numbers">Configure Numbers</string>
     <string name="add_numbers">Add Numbers</string>
+    <string name="enable_admin">Enable Admin</string>
     <string name="pref_numbers">pref_numbers</string>
     <string name="pref_imeiimsi">pref_imesiimsi</string>
     <string name="imei">imei</string>
