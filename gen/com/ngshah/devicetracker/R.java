@@ -51,6 +51,8 @@ public final class R {
         public static final int hello_world=0x7f060002;
         public static final int imei=0x7f060008;
         public static final int imsi=0x7f060009;
+        public static final int location_not_available=0x7f06000b;
+        public static final int numeric_numbers_only=0x7f06000a;
         public static final int pref_imeiimsi=0x7f060007;
         public static final int pref_numbers=0x7f060006;
     }

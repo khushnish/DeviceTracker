@@ -11,5 +11,7 @@
     <string name="pref_imeiimsi">pref_imesiimsi</string>
     <string name="imei">imei</string>
     <string name="imsi">imsi</string>
+    <string name="numeric_numbers_only">Allowed Only Numeric numbers</string>
+    <string name="location_not_available">Location information not available</string>
 
 </resources>

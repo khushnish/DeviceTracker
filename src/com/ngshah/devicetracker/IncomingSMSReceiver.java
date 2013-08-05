@@ -3,7 +3,6 @@ package com.ngshah.devicetracker;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -58,14 +57,6 @@ public class IncomingSMSReceiver extends BroadcastReceiver {
 				    				smsContent.add(msgContent);
 				    			}
 				    		}
-				    		
-			    			try {
-			    				boolean isAvailable = Pattern.compile(Pattern.quote(msgContent), Pattern.CASE_INSENSITIVE).matcher(Common.prefixes[21]).find();
-			    				
-			    				Log.e(TAG, "isAvailable : " + isAvailable);
-			    			} catch (Exception e) {
-			    				e.printStackTrace();
-			    			}
 				    	}
 				    	
 				    	if ( smsContent.size() > 0 ) {

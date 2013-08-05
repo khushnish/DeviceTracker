@@ -1,16 +1,12 @@
 package com.ngshah.devicetracker;
 
-import java.util.List;
 import java.util.Map;
 
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.telephony.NeighboringCellInfo;
-import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -90,81 +86,26 @@ public class BootCompleteService extends Service {
 	
 	private void checkSimIsChanged() {
 		if ( !imsi.equals(preferences.getString(getString(R.string.imsi), "")) ) {
+			
+			final SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pref_numbers), MODE_PRIVATE);
+			final Map<String, ?> numers = sharedPreferences.getAll();
+			
 			//	Send SMS on Registered Numbers
-			
-			//	IMEI and IMSI
-			sendImeiAndImsiInfo();
-			
-			//	Network
-			sendNetworkInfo();
-			
-			//	Location
-			sendLocationInfo();
-		}
-	}
-	
-	private void sendImeiAndImsiInfo() {
-		sendSMS("IMEI is : " + imei + "\nIMSI is : " + imsi);
-	}
-	
-	private void sendNetworkInfo() {
-		
-		final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-		final GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
-		
-		final String networkOperator = telephonyManager.getNetworkOperator();
-		final String mcc = networkOperator.substring(0, 3);
-		final String mnc = networkOperator.substring(3);
-		
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Country : " + telephonyManager.getNetworkCountryIso());
-		builder.append("\nNetwork Name : " + telephonyManager.getNetworkOperatorName());
-		
-		if ( cellLocation != null ) {
-			builder.append("\nCell Id : " + cellLocation.getCid());
-			builder.append("\nLAC : " + cellLocation.getLac());
-		}
-		builder.append("\nMNC : " + mnc);
-		builder.append("\nMCC : " + mcc);
-		
-		final List<NeighboringCellInfo> neighboringList = telephonyManager.getNeighboringCellInfo();
-		
-		if ( neighboringList != null && neighboringList.size() > 0 ) {
-			String stringNeighboring = "\nNeighboring List- Lac : Cid : RSSI\n";
-			for ( int i = 0; i < neighboringList.size(); i++ ) {
+			SendSMS sendSMS;
+			for (Map.Entry<String, ?> entry : numers.entrySet()) {
+			    Log.e("BootCompleteReceiver", "Key = " + entry.getKey() + ", Value = " + entry.getValue());
+			    
+			    sendSMS = new SendSMS(this, String.valueOf(entry.getValue()));
 				
-				String dBm;
-				int rssi = neighboringList.get(i).getRssi();
-				if ( rssi == NeighboringCellInfo.UNKNOWN_RSSI ) {
-					dBm = "Unknown RSSI";
-				} else {
-					dBm = String.valueOf(-113 + 2 * rssi) + " dBm";
-				}
+				//	IMEI and IMSI
+				sendSMS.sendImeiAndImsi();
 				
-				stringNeighboring = stringNeighboring
-						+ String.valueOf(neighboringList.get(i).getLac()) +" : "
-						+ String.valueOf(neighboringList.get(i).getCid()) +" : "
-						+ String.valueOf(neighboringList.get(i).getPsc()) +" : "
-						+ String.valueOf(neighboringList.get(i).getNetworkType()) +" : "
-						+ dBm +"\n";
+				//	Network
+				sendSMS.sendNetworkInfo();
+				
+				//	Location
+				sendSMS.sendLocation();
 			}
-			builder.append(stringNeighboring);
-		}
-		sendSMS(builder.toString());
-	}
-	
-	private void sendLocationInfo() {
-		
-	}
-	
-	private void sendSMS (String content) {
-		final SmsManager sms = SmsManager.getDefault();
-		final SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pref_numbers), MODE_PRIVATE);
-		final Map<String, ?> numers = sharedPreferences.getAll();
-		
-		for (Map.Entry<String, ?> entry : numers.entrySet()) {
-		    Log.e("BootCompleteReceiver", "Key = " + entry.getKey() + ", Value = " + entry.getValue());
-		    sms.sendTextMessage(String.valueOf(entry.getValue()), null, content, null, null);
 		}
 	}
 }
