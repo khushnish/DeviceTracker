@@ -3,6 +3,9 @@ package com.ngshah.devicetracker;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import android.app.Activity;
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
@@ -39,6 +42,9 @@ public class MainActivity extends DeviceAdminReceiver {
 		private Map<String, ?> numbers;
 		private ArrayAdapter<Object> adapter;
 		
+		private Button btnEnableAdmin;
+		private Button btnGooglePlayService;
+		
 		private DevicePolicyManager mDPM;
 //		private ActivityManager mAM;
 		private ComponentName mDeviceAdminSample;
@@ -64,8 +70,11 @@ public class MainActivity extends DeviceAdminReceiver {
 			final Button btnAddNumbers = (Button) findViewById(R.id.activity_main_btn_add_numbers);
 			btnAddNumbers.setTypeface(typeface, Typeface.BOLD);
 			
-			final Button btnEnableAdmin = (Button) findViewById(R.id.activity_main_btn_enable_admin);
-			btnAddNumbers.setTypeface(typeface, Typeface.BOLD);
+			btnEnableAdmin = (Button) findViewById(R.id.activity_main_btn_enable_admin);
+			btnEnableAdmin.setTypeface(typeface, Typeface.BOLD);
+			
+			btnGooglePlayService = (Button) findViewById(R.id.activity_main_btn_install_google_play_service);
+			btnGooglePlayService.setTypeface(typeface, Typeface.BOLD);
 			
 			final ListView numbersList = (ListView) findViewById(R.id.activity_main_list_numbers);
 			ArrayList<Object> list = new ArrayList<Object>(numbers.values());
@@ -95,14 +104,40 @@ public class MainActivity extends DeviceAdminReceiver {
 				}
 			});
 			
+			btnGooglePlayService.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					final Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
+					startActivity(intent);
+				}
+			});
+			
 			mDPM = (DevicePolicyManager)getSystemService(Context.DEVICE_POLICY_SERVICE);
 //			mAM = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
 			mDeviceAdminSample = new ComponentName(this, MainActivity.class);
+		}
+		
+		@Override
+		protected void onResume() {
+			super.onResume();
 			
-			boolean active = mDPM.isAdminActive(mDeviceAdminSample);
+			checkAdminIsEnable();
+			checkPlayServiceIsInstalled();
+		}
+		
+		private void checkAdminIsEnable() {
+			final boolean active = mDPM.isAdminActive(mDeviceAdminSample);
 			
 			if ( active ) {
 				btnEnableAdmin.setVisibility(Button.GONE);
+			}
+		}
+		
+		private void checkPlayServiceIsInstalled() {
+			if ( GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS ) {
+				btnGooglePlayService.setVisibility(Button.GONE);
 			}
 		}
 		
@@ -161,6 +196,7 @@ public class MainActivity extends DeviceAdminReceiver {
 			} else if ( requestCode == RESULT_ENABLE ) {
 				 if (resultCode == Activity.RESULT_OK) {
 	                 Log.i(TAG, "Admin enabled!");
+	                 checkAdminIsEnable();
 	             } else {
 	                 Log.i(TAG, "Admin enable FAILED!");
 	             }

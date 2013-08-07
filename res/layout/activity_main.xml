@@ -32,6 +32,7 @@
             android:id="@+id/activity_main_btn_add_numbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:background="@drawable/button_selector"
             android:shadowColor="#0099CC"
             android:shadowDx="1"
@@ -39,13 +40,13 @@
             android:shadowRadius="2"
             android:text="@string/add_numbers"
             android:textColor="@android:color/white"
-            android:layout_marginRight="5dp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/activity_main_btn_enable_admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:background="@drawable/button_selector"
             android:shadowColor="#0099CC"
             android:shadowDx="1"
@@ -56,11 +57,26 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/activity_main_btn_install_google_play_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_selector"
+        android:shadowColor="#0099CC"
+        android:shadowDx="1"
+         android:layout_below="@id/activity_main_lin_header_buttons"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:layout_centerHorizontal="true"
+        android:text="@string/google_play_service"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
     <View
         android:id="@+id/activity_main_view_border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/activity_main_lin_header_buttons"
+        android:layout_below="@id/activity_main_btn_install_google_play_service"
         android:layout_margin="5dp"
         android:background="#ff0099CC" />
 

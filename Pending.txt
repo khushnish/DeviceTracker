@@ -1,8 +1,8 @@
 Device tracker
 
-- Turn off delivery Report
+- Location for boot receiver and sms
 - Disable/Enable launcher
 - PowerManager.reboot(); -  to reboot device
 - Multi language support
-- Location for boot receiver and sms
 - Capture photo from front cam
+- Turn off delivery Report

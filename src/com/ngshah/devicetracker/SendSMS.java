@@ -6,7 +6,9 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -14,16 +16,19 @@ import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.ngshah.devicetracker.utils.Common;
 import com.ngshah.devicetracker.utils.LocationImpl;
 
-public class SendSMS implements LocationImpl {
+public class SendSMS implements LocationImpl, LocationListener {
 	
 	private final String TAG = this.getClass().getSimpleName();
 
 	private Context context;
 	private String senderNumber = "";
 	private boolean isLocationAvailable = false;
+	private LocationManager locationManager;
 	
 	public SendSMS(Context context, String senderNumber) {
 		this.context = context;
@@ -92,36 +97,85 @@ public class SendSMS implements LocationImpl {
 	}
 	
 	protected void sendLocation() {
-		final LocationUpdate locationUpdate = new LocationUpdate(context, this);
-		synchronized (locationUpdate) {
-			try {
-				locationUpdate.wait(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		LocationUpdate locationUpdate = null;
+		if ( GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS ) {
+			locationUpdate = new LocationUpdate(context, this);
+			synchronized (locationUpdate) {
+				try {
+					locationUpdate.wait(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
 		if ( !isLocationAvailable ) {
-			Log.e(TAG, "Location NOT Available");
+			Log.e(TAG, "Play Service GPS DATA NOT Available");
 			
-			Location location = locationUpdate.getLastLocation();
+			Location location = null;
+			if ( locationUpdate != null ) {
+				location = locationUpdate.getLastLocation();
+			}
 			if ( location != null) {
 				updateLocation(location);
 			} else {
-				final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-				location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				Log.e(TAG, "Trying GPS Location");
+				locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 				
-				if ( location != null ) {
-					updateLocation(location);
+				if ( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
+					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, this);
+					synchronized (locationManager) {
+						try {
+							locationManager.wait(10000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
 				} else {
-					location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					Log.e(TAG, "GPS provider not Available");
+				}
+				
+				if ( !isLocationAvailable &&
+						locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ) {
+					synchronized (locationManager) {
+						try {
+							Log.e(TAG, "Trying Network Location");
+							locationManager.wait(10000);
+							if ( !isLocationAvailable ) {
+								locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0f, this);
+								locationManager.wait(10000);
+								Log.e(TAG, "No Network Location");
+							}
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				} else {
+					Log.e(TAG, "Network provider not Available");
+				}
+				
+				if ( !isLocationAvailable ) {
+					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 					
-					if ( location != null ) {
+					if ( !isLocationAvailable && location != null ) {
+						Log.e(TAG, "Got GPS LAST Location Available");
 						updateLocation(location);
 					} else {
-						sendSMS(context.getString(R.string.location_not_available));
+						Log.e(TAG, "Trying Network LAST Location Available");
+						location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						
+						if ( !isLocationAvailable && location != null ) {
+							Log.e(TAG, "Got Network LAST Location Available");
+							updateLocation(location);
+						} else {
+							Log.e(TAG, "Send SMS Location Not getting");
+							sendSMS(context.getString(R.string.location_not_available));
+						}
 					}
+				} else {
+					Log.e(TAG, "Location NOT Available");
 				}
+				locationManager.removeUpdates(this);
 			}
 		} else {
 			Log.e(TAG, "Location Available");
@@ -179,12 +233,40 @@ public class SendSMS implements LocationImpl {
 		if ( location.hasSpeed() ) {
 			builder.append("\n").append("Speed:").append(location.getSpeed()).append(" meters/second");
 		}
-		
+			
 		sendSMS(builder.toString());
 	}
 	
 	private void sendSMS (String content) {
 		final SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(senderNumber, null, content, null, null);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		
+		Log.e(TAG, "onLocationChanged : Lat : " + location.getLatitude() + 
+				", Long : " + location.getLongitude());
+		
+		isLocationAvailable = true;
+		locationManager.removeUpdates(this);
+		if ( location != null ) {
+			updateLocation(location);
+		}
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		Log.e(TAG, "onProviderDisabled : " + provider);
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		Log.e(TAG, "onProviderEnabled : " + provider);
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		Log.e(TAG, "onStatusChanged : " + provider);
 	}
 }
