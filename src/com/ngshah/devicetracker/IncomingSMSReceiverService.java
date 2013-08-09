@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -83,9 +85,27 @@ public class IncomingSMSReceiverService extends Service {
 				
 				Log.e(TAG, "Locking Screen ");
 				sendSMS.lockScreen(content);
+			} else if ( content.contains(Common.prefixes[25]) ||
+					content.contains(Common.prefixes[26]) || 
+					content.contains(Common.prefixes[27]) ||
+					content.contains(Common.prefixes[28]) ) {	//	Enable App Launcher
+				final ComponentName componentToDisable = new ComponentName(getPackageName(),
+						  getPackageName() + ".MainActivity$DeviceTrackerActivity");
+				getPackageManager().setComponentEnabledSetting(
+						componentToDisable, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+				Log.e(TAG, "App Enable");
+			} else if ( content.contains(Common.prefixes[29]) ||
+					content.contains(Common.prefixes[30]) || 
+					content.contains(Common.prefixes[31]) ||
+					content.contains(Common.prefixes[32]) ) {	//	Disable App Launcher
+				final ComponentName componentToDisable = new ComponentName(getPackageName(),
+						getPackageName() + ".MainActivity$DeviceTrackerActivity");
+				getPackageManager().setComponentEnabledSetting(
+						 componentToDisable, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+				Log.e(TAG, "App Disable");
 			}
 		}
-		
+
 		stopSelf();
 	}
 	

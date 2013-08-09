@@ -1,8 +1,10 @@
 Device tracker
 
 - Location for boot receiver and sms
-- Disable/Enable launcher
-- PowerManager.reboot(); -  to reboot device
+- PowerManager.reboot(); -  to reboot device	//	Not possible
+
+
 - Multi language support
 - Capture photo from front cam
 - Turn off delivery Report
+- Track Device using GCM Up Stream and Down Stream

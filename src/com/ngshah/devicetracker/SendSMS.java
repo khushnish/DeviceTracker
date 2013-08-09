@@ -182,7 +182,7 @@ public class SendSMS implements LocationImpl, LocationListener {
 		}
 	}
 	
-	protected void wipeData(){
+	protected void wipeData() {
 		final DevicePolicyManager devicePolicyManager = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 		boolean isEnabled = devicePolicyManager.isAdminActive(new ComponentName(context, MainActivity.class));
 		
