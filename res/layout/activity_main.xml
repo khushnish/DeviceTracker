@@ -61,13 +61,13 @@
         android:id="@+id/activity_main_btn_install_google_play_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/activity_main_lin_header_buttons"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/button_selector"
         android:shadowColor="#0099CC"
         android:shadowDx="1"
-         android:layout_below="@id/activity_main_lin_header_buttons"
         android:shadowDy="1"
         android:shadowRadius="2"
-        android:layout_centerHorizontal="true"
         android:text="@string/google_play_service"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
@@ -80,10 +80,17 @@
         android:layout_margin="5dp"
         android:background="#ff0099CC" />
 
+    <com.amazon.device.ads.AdLayout
+        android:id="@+id/activity_main_view_border_ad_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
     <ListView
         android:id="@+id/activity_main_list_numbers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/activity_main_view_border_ad_view"
         android:layout_below="@id/activity_main_view_border"
         android:cacheColorHint="@android:color/transparent"
         android:divider="#669900"

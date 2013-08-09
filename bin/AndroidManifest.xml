@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +34,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.amazon.device.ads.AdActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="PlayRingActivity"
+            android:theme="@android:style/Theme.Translucent" >
         </activity>
 
         <receiver android:name="IncomingSMSReceiver" >
@@ -64,11 +74,6 @@
                 </action>
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name="PlayRingActivity"
-            android:theme="@android:style/Theme.Translucent" >
-        </activity>
     </application>
 
 </manifest>

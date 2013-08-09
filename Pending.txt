@@ -2,7 +2,7 @@ Device tracker
 
 - Location for boot receiver and sms
 - PowerManager.reboot(); -  to reboot device	//	Not possible
-
+- https://www.tapcontext.com/register/?r=g5rnmeudx5
 
 - Multi language support
 - Capture photo from front cam

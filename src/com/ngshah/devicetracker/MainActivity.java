@@ -3,9 +3,6 @@ package com.ngshah.devicetracker;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import android.app.Activity;
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
@@ -30,6 +27,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdRegistration;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 public class MainActivity extends DeviceAdminReceiver {
 	
 	public static class DeviceTrackerActivity extends Activity {
@@ -48,6 +50,7 @@ public class MainActivity extends DeviceAdminReceiver {
 		private DevicePolicyManager mDPM;
 //		private ActivityManager mAM;
 		private ComponentName mDeviceAdminSample;
+		private AdLayout adView;
 		
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,9 @@ public class MainActivity extends DeviceAdminReceiver {
 		}
 		
 		private void initializeComponents() {
+			
+			AdRegistration.setAppKey("fe4fecbbff304e57b6405975185bae29");
+			adView = (AdLayout) findViewById(R.id.activity_main_view_border_ad_view);
 			
 			preferences = getSharedPreferences(getString(R.string.pref_numbers), MODE_PRIVATE);
 			numbers = preferences.getAll();
@@ -201,6 +207,12 @@ public class MainActivity extends DeviceAdminReceiver {
 	                 Log.i(TAG, "Admin enable FAILED!");
 	             }
 			}
+		}
+		
+		@Override
+		protected void onDestroy() {
+			super.onDestroy();
+			this.adView.destroy();
 		}
 	}
 }
