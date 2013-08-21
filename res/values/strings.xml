@@ -14,5 +14,6 @@
     <string name="imsi">imsi</string>
     <string name="numeric_numbers_only">Allowed Only Numeric numbers</string>
     <string name="location_not_available">Location information not available</string>
+    <string name="stop">Stop</string>
 
 </resources>
