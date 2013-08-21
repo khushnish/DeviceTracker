@@ -112,6 +112,7 @@ public class IncomingSMSReceiverService extends Service {
 	private void playRingAndVibratePhone(boolean vibrate, boolean ring) {
 		
 		final Intent playRingIntent = new Intent(this, PlayRingActivity.class);
+		playRingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		playRingIntent.putExtra("vibrate", vibrate);
 		playRingIntent.putExtra("ring", ring);
 		startActivity(playRingIntent);
