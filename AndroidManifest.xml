@@ -51,6 +51,8 @@
 
         <service android:name="IncomingSMSReceiverService" >
         </service>
+        <service android:name="BootCompleteService" >
+        </service>
 
         <receiver android:name="BootCompleteReceiver" >
             <intent-filter>
