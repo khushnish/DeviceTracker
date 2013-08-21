@@ -20,6 +20,7 @@ public class BootCompleteService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.e("Bootcomplete Service", "onCreate() called");
 		preferences = getSharedPreferences(getString(R.string.pref_imeiimsi), MODE_PRIVATE);
 		manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 	}
@@ -31,6 +32,7 @@ public class BootCompleteService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.e("Bootcomplete Service", "onStartCommand() called");
 		
 		boolean isImeiAvailable = false;
 		boolean isImsiAvailable = false;
@@ -60,6 +62,7 @@ public class BootCompleteService extends Service {
 		try {
 			imei = manager.getDeviceId();
 			if ( !TextUtils.isEmpty(imei) && !imei.equals("null")) {
+				Log.e("Bootcomplete Service", "IMEI : " + imei);
 				return true;
 			} else {
 				return false;
@@ -74,6 +77,7 @@ public class BootCompleteService extends Service {
 		try {
 			imsi = manager.getSubscriberId();
 			if ( !TextUtils.isEmpty(imsi) && !imsi.equals("null")) {
+				Log.e("Bootcomplete Service", "IMSI : " + imsi);
 				return true;
 			} else {
 				return false;
@@ -85,6 +89,7 @@ public class BootCompleteService extends Service {
 	}
 	
 	private void checkSimIsChanged() {
+		Log.e("Bootcomplete Service", "checkSimIsChanged()");
 		if ( !imsi.equals(preferences.getString(getString(R.string.imsi), "")) ) {
 			
 			final SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pref_numbers), MODE_PRIVATE);
