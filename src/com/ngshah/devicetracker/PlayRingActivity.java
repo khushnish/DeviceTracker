@@ -16,6 +16,7 @@ public class PlayRingActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.playring);
 		
 		boolean vibrate = getIntent().getBooleanExtra("vibrate", true);
 		boolean ring = getIntent().getBooleanExtra("ring", true);
@@ -27,6 +28,7 @@ public class PlayRingActivity extends Activity {
 		if ( vibrate ) {
 			try {
 				((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(12000);
+				finish();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -50,6 +52,7 @@ public class PlayRingActivity extends Activity {
 	public void onClickStop(View view) {
 		try {
 			rt.stop();
+			finish();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
