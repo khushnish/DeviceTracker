@@ -8,3 +8,53 @@ Device tracker
 - Capture photo from front cam
 - Turn off delivery Report
 - Track Device using GCM Up Stream and Down Stream
+
+
+Device Tracker lets you find your misplaced or lost phone.
+Track device through SMS. Does not require internet connectivity.
+
+Send SMS on your phone which you have registered as a family member to track your device.
+Once you open up the application, IMSI and IMEI will be registered.
+
+When SIM is changed, new SIM number and IMSI number will be send to all your family members.
+Track device through new SIM number.
+
+How it works
+- Install the app
+- Enable Admin
+- Install Google Play Service for better Location Service
+- Add family Member numbers
+
+Enable Location Service
+- Select Settings, Location service, enable GPS Satellite for accurate location
+
+Features
+- Find Device current Location
+- Find Cell Information (LAC, MNC, MCC)
+- Get IMEI AND IMSI
+- SIM Changed alert on reboot
+- Ring phone if phone is misplaced
+- Vibrate phone
+- Lock Screen
+- Wipe phone data (Like Factory Reset). Only phone data. Not SDCard Data
+
+What to do if the Phone is misplaced
+- Send SMS on your number from your family member which you have entered
+- Send "Ring" SMS to your phone.
+- Can also send "Ring and Vibrate" SMS
+
+What to do if the Phone is lost
+- Send SMS on your number from your family member which you have entered
+- Send CellInfo or Cell Location, Location or Gps
+- If SIM changed, get IMEI and IMSI through sending SMS of "IMEI AND IMSI"
+
+To Lock the screen
+- Send SMS on your number from your family member which you have entered
+- Send "Lock Device "<NUMERIC PASSWORD>. Eg. "Lock Device 1234"
+
+Once you get the location information, open maps.goolge.com / Google Map on your device
+Enter Latitude and Longitude in search box. Eg. 23.03, 72.40
+Then you will get the exact location.
+
+Note :
+This application is working on single sim only and not working on Tablet without SIM.
