@@ -27,14 +27,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.amazon.device.ads.AdError;
 import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdListener;
+import com.amazon.device.ads.AdProperties;
 import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.ads.AdTargetingOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends DeviceAdminReceiver {
 	
-	public static class DeviceTrackerActivity extends Activity {
+	public static class DeviceTrackerActivity extends Activity implements AdListener {
 		
 		private final String TAG = this.getClass().getSimpleName();
 		static final int RESULT_ENABLE = 1;
@@ -63,8 +67,19 @@ public class MainActivity extends DeviceAdminReceiver {
 		
 		private void initializeComponents() {
 			
-			AdRegistration.setAppKey("fe4fecbbff304e57b6405975185bae29");
+			AdRegistration.enableTesting(true);
+			AdRegistration.enableLogging(true);
+			
 			adView = (AdLayout) findViewById(R.id.activity_main_view_border_ad_view);
+			adView.setListener(this);
+
+			try {
+				AdRegistration.setAppKey("fe4fecbbff304e57b6405975185bae29");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			adView.loadAd(new AdTargetingOptions());
 			
 			preferences = getSharedPreferences(getString(R.string.pref_numbers), MODE_PRIVATE);
 			numbers = preferences.getAll();
@@ -213,6 +228,30 @@ public class MainActivity extends DeviceAdminReceiver {
 		protected void onDestroy() {
 			super.onDestroy();
 			this.adView.destroy();
+		}
+
+		@Override
+		public void onAdCollapsed(AdLayout arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onAdExpanded(AdLayout arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onAdFailedToLoad(AdLayout arg0, AdError arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onAdLoaded(AdLayout arg0, AdProperties arg1) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

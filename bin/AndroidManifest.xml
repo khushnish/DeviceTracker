@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -29,11 +30,7 @@
         <activity
             android:name="MainActivity$DeviceTrackerActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+           
         </activity>
         <activity
             android:name="com.amazon.device.ads.AdActivity"
@@ -41,6 +38,11 @@
         <activity
             android:name="PlayRingActivity"
             android:theme="@android:style/Theme.Translucent" >
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <receiver android:name="IncomingSMSReceiver" >
@@ -50,6 +52,8 @@
         </receiver>
 
         <service android:name="IncomingSMSReceiverService" >
+        </service>
+        <service android:name="BootCompleteService" >
         </service>
 
         <receiver android:name="BootCompleteReceiver" >
