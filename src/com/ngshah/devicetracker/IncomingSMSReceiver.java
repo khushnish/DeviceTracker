@@ -1,7 +1,6 @@
 package com.ngshah.devicetracker;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Map;
 
 import android.content.BroadcastReceiver;
@@ -37,11 +36,10 @@ public class IncomingSMSReceiver extends BroadcastReceiver {
 			    Log.i(TAG, "Sender Number : " + senderNumber);
 			    senderNumber = contactExists(senderNumber);
 			    
-			    final ArrayList<String> smsContent = new ArrayList<String>();
-			    
 			    if ( !senderNumber.equalsIgnoreCase("") ) {
-			    	 Log.i(TAG, "Contact Exists : ");
-				    if ( senderIsAvailable(senderNumber) ) {
+			    	final ArrayList<String> smsContent = new ArrayList<String>();
+			    	Log.i(TAG, "Contact Exists : ");
+//				    if ( senderIsAvailable(senderNumber) ) {
 				    	
 				    	final SmsMessage [] messages = new SmsMessage[pdus.length];
 				    	String msgContent;
@@ -51,7 +49,7 @@ public class IncomingSMSReceiver extends BroadcastReceiver {
 				    		msgContent = messages[i].getMessageBody();
 				    		 
 				    		for (int j = 0; j < Common.prefixes.length; j++) {
-				    			if ( msgContent.toUpperCase(Locale.getDefault()).contains(Common.prefixes[j]) ) {
+				    			if ( msgContent.equalsIgnoreCase(Common.prefixes[j]) ) {
 				    				Log.i(TAG, "Aborting broadcast...");
 				    				abortBroadcast();
 				    				smsContent.add(msgContent);
@@ -65,7 +63,7 @@ public class IncomingSMSReceiver extends BroadcastReceiver {
 					    	smsReceiverService.putExtra("senderNumber", senderNumber);
 					    	context.startService(smsReceiverService);
 				    	}
-				    }
+//				    }
 			    } else {
 			    	Log.i(TAG, "Contact does not Exists : ");
 			    }
@@ -93,19 +91,23 @@ public class IncomingSMSReceiver extends BroadcastReceiver {
 	
 	public String contactExists(String number) {
 		/// number is the phone number
-		Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+		Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, number);
 		Log.e(TAG, "lookupUri : " + lookupUri);
 		final String[] mPhoneNumberProjection = { PhoneLookup._ID, PhoneLookup.NUMBER, PhoneLookup.LOOKUP_KEY };
 		final Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
 		
+		Log.e(TAG, "Cur Size :  : " + cur.getCount());
+		
 		try {
-		   if ( cur.moveToFirst() ) {
+		   while ( cur.moveToNext() ) {
 			   String newId = cur.getString(cur.getColumnIndex(PhoneLookup._ID));
 			   String newNumber = cur.getString(cur.getColumnIndex(PhoneLookup.NUMBER));
 			   Log.e(TAG, "New ID is : " + newId);
 			   Log.e(TAG, "Number is : " + newNumber);
 			   
-		      return newNumber;
+			   if ( senderIsAvailable(newNumber) ) {
+				   return newNumber;
+			   }
 		   }
 		} finally {
 			if (cur != null)
